@@ -5,6 +5,7 @@ import com.jakubsuszynski.restresponse.Rates;
 import com.jakubsuszynski.restresponse.RestResponse;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -28,7 +29,7 @@ public class UsersInterface {
             String input = scanner.nextLine();
 
 
-            if (!checkInput(input)) {
+            if (!input.matches(PATTERN)) {
                 System.out.println("Zły format danych.");
                 continue;
             }
@@ -36,32 +37,31 @@ public class UsersInterface {
 
             Optional<RestResponse> optionalRestResponse = Optional.ofNullable(restClient.getCurrencyRates(input));
 
-            if (optionalRestResponse.isPresent()) {
-
-
-                List<BigDecimal> bids = optionalRestResponse.get().getRates().stream()
-                        .map(Rates::getBid)
-                        .collect(Collectors.toList());
-
-                List<BigDecimal> asks = optionalRestResponse.get().getRates().stream()
-                        .map(Rates::getAsk)
-                        .collect(Collectors.toList());
-
-                System.out.println(getMean(bids));
-                System.out.println(getStandardDeviation(asks));
-
-            } else
-                System.out.println("Błędny zakres dat lub brak danych w systemie ");
+            printOutput(optionalRestResponse);
 
         }
 
     }
 
-    private Boolean checkInput(String input) {
-        if (input.matches(PATTERN))
-            return true;
-        return false;
+    private void printOutput(Optional<RestResponse> optionalRestResponse) {
+        if (optionalRestResponse.isPresent()) {
+
+
+            List<BigDecimal> bids = optionalRestResponse.get().getRates().stream()
+                    .map(Rates::getBid)
+                    .collect(Collectors.toList());
+
+            List<BigDecimal> asks = optionalRestResponse.get().getRates().stream()
+                    .map(Rates::getAsk)
+                    .collect(Collectors.toList());
+
+            System.out.println(getMean(bids));
+            System.out.println(new DecimalFormat("0.0000").format(getStandardDeviation(asks)));
+
+        } else
+            System.out.println("Błędny zakres dat lub brak danych w systemie ");
     }
+
 
     private BigDecimal getMean(List<BigDecimal> values) {
 
@@ -73,9 +73,16 @@ public class UsersInterface {
 
     }
 
-    private BigDecimal getStandardDeviation(List<BigDecimal> values) {
+    private Double getStandardDeviation(List<BigDecimal> values) {
         BigDecimal mean = getMean(values);
+        BigDecimal squareStandardDeviation = BigDecimal.ZERO;
 
-        return mean;
+        for (BigDecimal value : values) {
+            squareStandardDeviation = squareStandardDeviation.add(value.subtract(mean).multiply(value.subtract(mean)));
+        }
+        squareStandardDeviation = squareStandardDeviation.divide(BigDecimal.valueOf(values.size()));
+
+
+        return Math.sqrt(squareStandardDeviation.doubleValue());
     }
 }
