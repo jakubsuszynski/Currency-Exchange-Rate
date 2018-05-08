@@ -1,12 +1,12 @@
 package com.jakubsuszynski.restresponse;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RestResponse {
     private String table;
     private String currency;
     private String code;
-    private ArrayList<Rates> rates;
+    private List<Rates> rates;
 
     public RestResponse() {
     }
@@ -36,11 +36,11 @@ public class RestResponse {
         this.code = code;
     }
 
-    public ArrayList<Rates> getRates() {
+    public List<Rates> getRates() {
         return rates;
     }
 
-    public void setRates(ArrayList<Rates> rates) {
+    public void setRates(List<Rates> rates) {
         this.rates = rates;
     }
 
