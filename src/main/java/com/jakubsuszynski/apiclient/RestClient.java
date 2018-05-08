@@ -13,7 +13,7 @@ public class RestClient {
 
 
     public RestResponse getCurrencyRates(String input) {
-        if (PatternMatcher.inputMatches(input)) {
+        if (!PatternMatcher.inputMatches(input)) {
             return null;
         }
         String[] inputDivided = input.split(" ");

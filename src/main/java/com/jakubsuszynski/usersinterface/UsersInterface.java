@@ -21,16 +21,16 @@ public class UsersInterface {
         String input;
 
         System.out.println("Dane wejściowe muszą mieć format CCC YYYY-MM-DD YYYY-MM-DD, np. "
-                + "EUR 2017-11-20 2017-11-24 i zatwierdź przyciskiem Enter"
+                + "EUR 2017-11-20 2017-11-24. Zatwierdź przyciskiem Enter"
                 + "\nMaksymalny odstęp to 367 dni");
 
         while (true) {
 
-            System.out.println("Podaj dane wejściowe: ");
+            System.out.println("\nPodaj dane wejściowe: ");
             input = scanner.nextLine();
 
 
-            if (PatternMatcher.inputMatches(input)) {
+            if (!PatternMatcher.inputMatches(input)) {
                 System.out.println("Zły format danych.");
                 continue;
             }
@@ -54,10 +54,10 @@ public class UsersInterface {
 
 
             System.out.println("Średni kurs kupna: "
-                    + new DecimalFormat("#.####").format(getMean(bids)));
+                    + new DecimalFormat("#.####").format(ProcessData.getMean(bids)));
 
             System.out.println("Odchylenie standardowe kursów sprzedaży: "
-                    + new DecimalFormat("#.####").format(getStandardDeviation(asks)));
+                    + new DecimalFormat("#.####").format(ProcessData.getStandardDeviation(asks)));
 
         } else
 
@@ -66,21 +66,4 @@ public class UsersInterface {
     }
 
 
-    private Double getMean(List<Double> values) {
-
-        return values.stream().mapToDouble(Double::valueOf).average().getAsDouble();
-
-    }
-
-    private Double getStandardDeviation(List<Double> values) {
-
-        Double mean = getMean(values);
-        Double temp = 0.0;
-
-        for (Double value : values) {
-            temp = temp + ((value - mean) * (value - mean));
-        }
-
-        return Math.sqrt((temp / values.size()));
-    }
 }
