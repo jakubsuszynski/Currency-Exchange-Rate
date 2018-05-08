@@ -5,6 +5,7 @@ import com.jakubsuszynski.restresponse.Rates;
 import com.jakubsuszynski.restresponse.RestResponse;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
@@ -55,8 +56,10 @@ public class UsersInterface {
                     .map(Rates::getAsk)
                     .collect(Collectors.toList());
 
-            System.out.println(getMean(bids));
-            System.out.println(new DecimalFormat("0.0000").format(getStandardDeviation(asks)));
+            System.out.println("Średni kurs kupna: "
+                    + getMean(bids));
+            System.out.println("Odchylenie standardowe kursów sprzedaży: "
+                    + new DecimalFormat("0.0000").format(getStandardDeviation(asks)));
 
         } else
             System.out.println("Błędny zakres dat lub brak danych w systemie ");
@@ -69,7 +72,7 @@ public class UsersInterface {
         for (BigDecimal value : values) {
             sum = sum.add(value);
         }
-        return sum.divide(BigDecimal.valueOf(values.size()));
+        return sum.divide(BigDecimal.valueOf(values.size()), 100, RoundingMode.HALF_EVEN);
 
     }
 
@@ -80,7 +83,7 @@ public class UsersInterface {
         for (BigDecimal value : values) {
             squareStandardDeviation = squareStandardDeviation.add(value.subtract(mean).multiply(value.subtract(mean)));
         }
-        squareStandardDeviation = squareStandardDeviation.divide(BigDecimal.valueOf(values.size()));
+        squareStandardDeviation = squareStandardDeviation.divide(BigDecimal.valueOf(values.size()), 100, RoundingMode.HALF_EVEN);
 
 
         return Math.sqrt(squareStandardDeviation.doubleValue());
