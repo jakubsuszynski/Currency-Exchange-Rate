@@ -1,4 +1,4 @@
-package com.jakubsuszynski.RestResponse;
+package com.jakubsuszynski.restresponse;
 
 import java.math.BigDecimal;
 
