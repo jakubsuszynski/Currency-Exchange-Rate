@@ -1,12 +1,10 @@
 package com.jakubsuszynski.restresponse;
 
-import java.math.BigDecimal;
-
 public class Rates {
     private String no;
     private String effectiveDate;
-    private BigDecimal bid;
-    private BigDecimal ask;
+    private Double bid;
+    private Double ask;
 
 
     public Rates() {
@@ -29,19 +27,19 @@ public class Rates {
         this.effectiveDate = effectiveDate;
     }
 
-    public BigDecimal getBid() {
+    public Double getBid() {
         return bid;
     }
 
-    public void setBid(BigDecimal bid) {
+    public void setBid(Double bid) {
         this.bid = bid;
     }
 
-    public BigDecimal getAsk() {
+    public Double getAsk() {
         return ask;
     }
 
-    public void setAsk(BigDecimal ask) {
+    public void setAsk(Double ask) {
         this.ask = ask;
     }
 }

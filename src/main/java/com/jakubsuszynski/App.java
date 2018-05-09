@@ -1,10 +1,9 @@
 package com.jakubsuszynski;
 
-import com.jakubsuszynski.usersInterface.UsersInterface;
+import com.jakubsuszynski.usersinterface.UsersInterface;
 
 public class App {
     public static void main(String[] args) {
-        UsersInterface usersInterface = new UsersInterface();
-        usersInterface.runApplication();
+        new UsersInterface().runApplication();
     }
 }
