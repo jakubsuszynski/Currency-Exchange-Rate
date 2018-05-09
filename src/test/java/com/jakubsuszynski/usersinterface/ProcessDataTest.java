@@ -1,9 +1,15 @@
 package com.jakubsuszynski.usersinterface;
 
+import com.jakubsuszynski.apiclient.RestClient;
+import com.jakubsuszynski.restresponse.Rates;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -11,25 +17,44 @@ import static org.junit.Assert.assertThat;
 public class ProcessDataTest {
 
 
+    RestClient restClient;
+
+    @Before
+    public void setUp() {
+        restClient = new RestClient();
+    }
+
     @Test
     public void countMean() {
-        List<Double> values = Arrays.asList(5.0, 5.0, 8.0);
+        List<BigDecimal> values = Arrays.asList(BigDecimal.valueOf(5), BigDecimal.valueOf(5), BigDecimal.valueOf(8));
 
-        assertThat(ProcessData.getMean(values), is(6.0));
+        assertThat(ProcessData.getMean(values).setScale(1, RoundingMode.HALF_UP), is(BigDecimal.valueOf(6.0)));
     }
 
 
     @Test
     public void countMean2() {
-        List<Double> values = Arrays.asList(1.0, 2.0, 3.0);
+        List<BigDecimal> values = Arrays.asList(BigDecimal.valueOf(1), BigDecimal.valueOf(2), BigDecimal.valueOf(3));
 
-        assertThat(ProcessData.getMean(values), is(2.0));
+        assertThat(ProcessData.getMean(values).setScale(1, RoundingMode.HALF_UP), is(BigDecimal.valueOf(2.0)));
     }
 
     @Test
     public void countStandardDeviation() {
-        List<Double> values = Arrays.asList(1.0, 2.0, 3.0);
+        List<BigDecimal> values = Arrays.asList(BigDecimal.valueOf(1), BigDecimal.valueOf(2), BigDecimal.valueOf(3));
 
-        assertThat(Math.round(ProcessData.getStandardDeviation(values)*10000.0)/10000.0, is(0.8165));
+        assertThat(ProcessData.getStandardDeviation(values), is(BigDecimal.valueOf(0.816497)));
     }
+
+    @Test
+    public void countMeanOnRealData() {
+        List<BigDecimal> values = restClient.getCurrencyRates("EUR 2017-11-20 2017-11-24").getRates().stream()
+                .map(Rates::getBid)
+                .collect(Collectors.toList());
+
+        assertThat(ProcessData.getMean(values).setScale(4, RoundingMode.HALF_UP), is(BigDecimal.valueOf(4.1815)));
+
+    }
+
+
 }

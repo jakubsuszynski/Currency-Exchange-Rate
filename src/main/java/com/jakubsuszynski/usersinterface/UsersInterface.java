@@ -4,7 +4,7 @@ import com.jakubsuszynski.apiclient.RestClient;
 import com.jakubsuszynski.restresponse.Rates;
 import com.jakubsuszynski.restresponse.RestResponse;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -49,15 +49,15 @@ public class UsersInterface {
 
         if (optionalRestResponse.isPresent()) {
 
-            List<Double> bids = optionalRestResponse.get().getRates().stream().map(Rates::getBid).collect(toList());
-            List<Double> asks = optionalRestResponse.get().getRates().stream().map(Rates::getAsk).collect(toList());
+            List<BigDecimal> bids = optionalRestResponse.get().getRates().stream().map(Rates::getBid).collect(toList());
+            List<BigDecimal> asks = optionalRestResponse.get().getRates().stream().map(Rates::getAsk).collect(toList());
 
 
             System.out.println("Średni kurs kupna: "
-                    + new DecimalFormat("#.####").format(ProcessData.getMean(bids)));
+                    + ProcessData.getMean(bids));
 
             System.out.println("Odchylenie standardowe kursów sprzedaży: "
-                    + new DecimalFormat("#.####").format(ProcessData.getStandardDeviation(asks)));
+                    + ProcessData.getStandardDeviation(asks));
 
         } else
 
